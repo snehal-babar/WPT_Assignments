@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+    <script>
+        $(()=>{
+            $("#accno").blur(()=>{
+                let input={accno:$("#accno").val()}
+                let obj1={
+                    data:input,
+                    url:"http://localhost:900/getbalance",
+                    type:'get',
+                    datatype:'json',
+                    success:(responsefromserver)=>{
+                            if(responsefromserver.status == true){
+                                $("#balance").html(responsefromserver.balance);
+                            }
+                    },
+                    error:(errorfromserver)=>{
+                        console.log("error");
+                    }
+                };
+                $.ajax(obj1);
+                
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Assignment 5....</h1>
+    <input type="text" name="" id="accno" placeholder="enter account number">
+    <span id="balance">balance appears here</span>
+</body>
+</html>
