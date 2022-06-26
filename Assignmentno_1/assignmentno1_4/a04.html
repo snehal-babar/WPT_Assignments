@@ -1,0 +1,165 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+      class Employee{
+         constructor(empid,empname,email,deptid){
+            this.empid=empid;
+            this.empname=empname;
+            this.email=email;
+            this.deptid=deptid;
+         }
+      }
+      class Logic{
+         constructor(){
+            this.arr=[
+               new Employee(1,"snehal","snehal@123",10),
+               new Employee(2,"mayuri","mayuri@123",20),
+               new Employee(3,"namrata","namrata@123",30),
+               new Employee(4,"tanuja","tanuja@123",40)
+            ];
+         }
+         getItemDetailsLogic(empid){
+            let output={result:false,empdetails:{}};
+            for(let i=0;i<this.arr.length;i++){
+               if(this.arr[i].empid == empid){
+                  output.result=true;
+                  output.empdetails=this.arr[i];
+                  break;
+               }
+            }
+            return output;
+         }
+         addItemDetailsLogic(obj){
+            this.arr.push(obj);
+         }
+         modifyItemDetails(){
+            document.querySelector("#msg").innerHTML="";
+            for(let i=0;i<this.arr.length;i++){
+               if(this.arr[i].empid == parseInt(document.querySelector("#empid").value)){
+                  this.arr[i].email=document.querySelector("#email").value;
+                  this.arr[i].empname=document.querySelector("#empname").value;
+                  this.arr[i].deptid=document.querySelector("#deptid").value;
+                  break;
+               }
+            }
+         }
+         removeItemDetailsLogic(){
+            for(let i=0;i<this.arr.length;i++){
+               if(this.arr[i].empid == parseInt(document.querySelector("#empid").value)){
+                  this.arr.splice(i,1);
+                  break;
+               }
+            }
+            document.querySelector("#empid").value = "";
+                document.querySelector("#empname").value = "";
+                document.querySelector("#email").value = "";
+                document.querySelector("#deptid").value = "";
+                document.querySelector("#msg").innerHTML = "Employee details is Deleted Successfully";
+         }
+         viewAll(){
+            let msg1="";
+            for(let i=0;i<this.arr.length;i++){
+               msg1+="<br>"+this.arr[i].empid+","+this.arr[i].empname+" "+this.arr[i].email+" "+this.arr[i].deptid;
+               document.querySelector("#msg").innerHTML=msg1;
+
+            }
+         }
+         deptidSearch(){
+            let msg3="";
+            for(let i=0;i<this.arr.length;i++){
+               if(this.arr[i].deptid==parseInt(document.getElementById("deptid").value)){
+                  msg3+="<br>"+this.arr[i].empid+" "+this.arr[i].empname+" "+this.arr[i].email;
+                  document.getElementById("msg").innerHTML=msg3;
+                  break;
+               }
+            }
+         }
+
+      }
+      window.addEventListener("DOMContentLoaded",()=>{
+         let logic=new Logic();
+         console.log(logic.arr);
+         console.log(logic.arr[0].empname);
+
+         let empid=document.querySelector("#empid");
+         empid.addEventListener('blur',()=>{
+            let empid=document.getElementById("empid").value;
+            let output=logic.getItemDetailsLogic(empid);
+            if(output.result==true){
+               document.querySelector("#empname").value=output.empdetails.empname;
+               document.querySelector("#email").value=output.empdetails.email;
+               document.querySelector("#deptid").value=output.empdetails.deptid;
+
+               document.querySelector("#add").disabled=true;
+               document.querySelector("#modify").disabled=false;
+               document.querySelector("#remove").disabled=false;
+               
+            }
+            else{
+               document.querySelector("#empname").value="";
+               document.querySelector("#email").value="";
+               document.querySelector("#deptid").value="";
+
+               document.querySelector("#add").disabled=false;
+               document.querySelector("#modify").disabled=true;
+               document.querySelector("#remove").disabled=true;
+               document.getElementById("msg2").innerHTML="elements added";
+            }
+         });
+         
+         let add=document.querySelector("#add");
+         add.addEventListener("click",()=>{
+            let empid=parseInt(document.getElementById("empid").value);
+            let empname=document.getElementById("empname").value;
+            let email=document.getElementById("email").value;
+            let deptid=parseInt(document.getElementById("deptid").value);
+            let obj={empid,empname,email,deptid};
+            logic.addItemDetailsLogic(obj);
+         });
+
+         let viewAll=document.getElementById("viewAll");
+         viewAll.addEventListener("click",()=>{
+            logic.viewAll();
+         });
+
+         let modify=document.querySelector("#modify");
+         modify.addEventListener("click",()=>{
+            logic.modifyItemDetails();
+         });
+         let remove1=document.querySelector("#remove");
+      remove1.addEventListener("click",()=>{
+         logic.removeItemDetailsLogic();
+      });
+
+      let dept=document.querySelector("#dept");
+      dept.addEventListener("click",()=>{
+         logic.deptidSearch();
+      });
+      });
+      
+      
+    </script>
+    
+ </head>
+ <body>
+    <h1>Employee</h1>
+    <input type="text" id="empid" placeholder="Employee ID">
+    <span id="msg2">Message will appear here</span>
+    <br>
+    <input type="text" id="empname" placeholder="Employee Name"><br>
+    <input type="text" id="email" placeholder="Employee Email"><br>
+    <input type="text" id="deptid" placeholder="Employee Department ID"><br>
+      <br>
+    <button id="add" disabled>Add</button>
+    <button id="modify" disabled>Modify</button>
+    <button id="remove" disabled>remove</button>
+    <button id="viewAll" >View All</button>
+    <button id="dept" >View on Deptid</button><br><br>
+    <span id="msg">Message will appear here</span>
+ </body>
+ </html>

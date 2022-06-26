@@ -1,0 +1,210 @@
+ <!DOCTYPE html>
+ <html lang="en">
+ <head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        class ItemStatus{
+            constructor(status,itemobject){
+                this.status=false;
+                this.itemobject=itemobject;
+            };
+        }
+        class Item{
+            constructor(itemno,itemprice,qty){
+                this.itemno=itemno;
+                this.itemprice=itemprice;
+                this.qty=qty;
+            };
+            setItemDetails(itemno,itemprice,qty){
+                this.itemno=itemno;
+                this.itemprice=itemprice;
+                this.qty=qty;
+            };
+            getItemDetails(){
+                return this.itemno+" "+this.itemprice+" "+this.qty;
+            };
+        }
+        class Logic{
+            constructor(){
+                this.items=[
+                    new Item(1,2,3),
+                    new Item(2,5,6),
+                    new Item(3,8,9),
+                    new Item(4,9,7)
+                ];
+            };
+            getItemDetailsLogic(itemno){
+                let output=new ItemStatus(false,{});
+                for(let i=0;i<this.items.length;i++){
+                    if(this.items[i].itemno == itemno){
+                        output.result=true;
+                        output.itemdetails=this.items[i];
+                        break;
+                    }
+                }
+                return output;
+            }
+            updateItemDetailsLogic(updateditems){
+                let output=false;
+                for(let i=0;i<this.items.length;i++){
+                    if(this.items[i].itemno == updateditems.itemno){
+                        this.items[i].setItemDetails(updateditems.itemno,updateditems.itemprice,updateditems.qty);
+                        output=true;
+                        break;
+                    }
+                }
+                return output;
+            };
+            removeItemDetailsLogic(itemno){
+                let output=false;
+                for(let i=0; i<this.items.length;i++){
+                    if(this.items[i].itemno == itemno){
+                        this.items.splice(i,1);
+                        output=true;
+                        break;
+                    }
+                }
+                return output;
+            };
+            addItemDetailsLogic(newitem){
+                this.items.push(newitem);
+            }
+            getAllItems(){
+                return this.items;
+            };
+        }
+       window.addEventListener("DOMContentLoaded",()=>{
+        let logic=new Logic();
+        console.log(logic);
+        showAllItems();
+        function showAllItems(){
+            let output=logic.getAllItems();
+            let msg="";
+            for(let i=0; i<output.length;i++){
+                msg+="<br>"+output[i].itemno+" "+output[i].itemprice+" "+output[i].qty;
+                document.querySelector("#contents").innerHTML=msg;
+            }
+        }
+        const itemnoid=document.querySelector("#itemno");
+        itemnoid.addEventListener("blur",()=>{
+            let itemno=document.querySelector("#itemno").value;
+            let output=logic.getItemDetailsLogic(itemno);
+
+            if(output.result){
+                document.querySelector("#price").value=output.itemdetails.itemprice;
+                document.querySelector("#qty").value=output.itemdetails.qty;
+
+                document.querySelector("#update").disabled=false;
+                document.querySelector("#delete").disabled=false;
+                document.querySelector("#clear").disabled=false;
+                document.querySelector("#add").disabled=true;
+                document.querySelector("#msg").innerHTML="item details found";
+            }
+            else{
+                document.querySelector("#update").disabled=true;
+                document.querySelector("#delete").disabled=true;
+                document.querySelector("#clear").disabled=true;
+                document.querySelector("#add").disabled=false;
+                document.querySelector("#msg").innerHTML="item details not found";
+                document.querySelector("#price").value="";
+                document.querySelector("#qty").value="";
+            }
+        });
+        const update=document.querySelector("#update");
+        update.addEventListener("click",()=>{
+            let input={itemno:document.querySelector("#itemno").value,
+                        itemprice:document.querySelector("#price").value,
+                        qty:document.querySelector("#qty").value
+        };
+        let output=logic.updateItemDetailsLogic(input);
+
+        if(output){
+            document.querySelector("#msg").innerHTML="update suceeded";
+					document.querySelector("#update").disabled=true;
+					document.querySelector("#delete").disabled=true;
+					document.querySelector("#clear").disabled=true;
+					document.querySelector("#itemno").value="";
+
+					document.querySelector("#price").value="";
+					document.querySelector("#qty").value="";
+        }
+        else{
+            document.querySelector("#msg").innerText="update failed";
+
+					document.querySelector("#update").disabled=true;
+					document.querySelector("#delete").disabled=true;
+					document.querySelector("#clear").disabled=true;
+        }
+        showAllItems();
+        });
+        const deletebutton =document.querySelector("#delete");
+        deletebutton.addEventListener("click",()=>{
+            let input=document.querySelector("#itemno").value;
+            let output=logic.removeItemDetailsLogic(input);
+            if(output){
+                document.querySelector("#msg").innerText="delete successfully";
+                document.querySelector("#update").disabled=true;
+                document.querySelector("#delete").disabled=true;
+                document.querySelector("#clear").disabled=true;
+                document.querySelector("#itemno").value="";
+
+                document.querySelector("#price").value="";
+                document.querySelector("#qty").value="";
+                showAllItems();
+            }
+            else{
+                document.querySelector("#msg").innerText="delete failed";
+                document.querySelector("#update").disabled=true;
+                document.querySelector("#delete").disabled=true;
+                document.querySelector("#clear").disabled=true;
+               
+            }
+        });
+        const clear = document.querySelector("#clear");
+        clear.addEventListener("click",()=>{
+            document.querySelector("#itemno").value="";
+            document.querySelector("#price").value="";
+            document.querySelector("#qty").value="";
+
+        });
+
+        const add=document.querySelector("#add");
+         add.addEventListener("click",()=>{
+            let input={
+                        itemno:document.getElementById("itemno").value,
+                        itemprice:document.getElementById("price").value,
+                        qty:document.getElementById("qty").value
+            };
+            logic.addItemDetailsLogic(input);
+            document.querySelector("#msg").innerText="element added";
+				document.querySelector("#update").disabled=true;
+				document.querySelector("#delete").disabled=true;
+				document.querySelector("#clear").disabled=true;
+				document.querySelector("#add").disabled=true;
+				document.querySelector("#itemno").value="";
+
+				document.querySelector("#price").value="";
+				document.querySelector("#qty").value="";
+                showAllItems();
+        });
+       });
+    </script>
+ </head>
+ <body>
+    <h1>Assignment no 2</h1>
+    <hr>
+    <input type="text" id="itemno" placeholder="itemno"><span id="msg"></span>
+    <br><input type="text" id="price" placeholder="price">
+    <br><input type="text" id="qty" placeholder="qty">
+    <br><br>
+    <button id="add" disabled>add</button>
+    <button id="update" disabled>update</button>
+    <button id="delete" disabled>delete items</button>
+    <button id="clear" disabled>clear boxes</button>
+    <hr>
+    <p id="contents"></p>
+ </body>
+ </html>
